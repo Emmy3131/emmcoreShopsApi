@@ -1,7 +1,9 @@
-
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+
+const productRoutes = require("./routes/productsRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
 
@@ -10,6 +12,10 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
 }));
 app.use(express.json());
+
+// Use the routes
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
