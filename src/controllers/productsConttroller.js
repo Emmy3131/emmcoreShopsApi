@@ -1,4 +1,4 @@
-const Product = require("../model/ProductModel");
+const Product = require("../models/ProductsModel");
 
 const ApiFeatures = require("../utils/ApiFeatures");
 

@@ -1,22 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const CategoryController = require("../controller/CategoryController");
-const authController = require("../controller/authController");
 
-//Protect all routes after this middleware
-// router.use(authController.protect);
+const CategoryController = require("../controllers/categoryController");
+const authController = require("../controllers/authController");
 
-// CREATE + GET
-router
-  .route("/")
-  .post(CategoryController.createCategory)
-  .get(CategoryController.getAllCategories);
+/*
+=====================================================
+PUBLIC CATEGORY ROUTES
+=====================================================
+*/
 
-// GET + UPDATE + DELETE
-router
-  .route("/:id")
-  .get(CategoryController.getCategoryById)
-  .patch(CategoryController.updateCategory)
-  .delete(CategoryController.deleteCategory);
+router.get("/", CategoryController.getAllCategories);
+router.get("/:id", CategoryController.getCategoryById);
+
+/*
+=====================================================
+ADMIN CATEGORY ROUTES
+=====================================================
+*/
+
+router.use(authController.protect);
+router.use(authController.restrictTo("admin"));
+
+router.post("/", CategoryController.createCategory);
+router.patch("/:id", CategoryController.updateCategory);
+router.delete("/:id", CategoryController.deleteCategory);
 
 module.exports = router;
