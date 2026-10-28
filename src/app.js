@@ -122,12 +122,12 @@ app.use("/api", limiter);
    HEALTH CHECK
 ===================================================== */
 
-// app.get("/api/health", (req, res) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "EmmCoreShops API is running",
-//   });
-// });
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "EmmCoreShops API is running",
+  });
+});
 
 /* =====================================================
    ROOT ROUTE
@@ -137,6 +137,7 @@ app.get("/", (req, res) => {
   res.status(200).json({
     status: "success",
     message: "Welcome to EmmCoreShops API",
+    health: "/api/health",
   });
 });
 
