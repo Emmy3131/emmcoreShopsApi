@@ -4,7 +4,7 @@ const Product = require("../models/ProductsModel");
 
 const catchAsync = require("../utils/catchAsync");
 
-const { exportCSV } = require("../utils/reports/exportCSV");
+const { exportCSV } = require("../utils/reports/exportsCSV");
 const { exportExcel } = require("../utils/reports/exportExcel");
 const { exportPDF } = require("../utils/reports/exportPDF");
 
