@@ -1,14 +1,28 @@
+
 require("dotenv").config();
 
 const app = require("./app");
 const connectDB = require("./config/db");
 
+let dbConnectionPromise;
+
+function ensureDBConnection() {
+  if (!dbConnectionPromise) {
+    dbConnectionPromise = connectDB().catch((error) => {
+      dbConnectionPromise = null;
+      throw error;
+    });
+  }
+
+  return dbConnectionPromise;
+}
+
 async function handleRequest(req, res) {
   try {
-    await connectDB();
+    await ensureDBConnection();
     return app(req, res);
   } catch (error) {
-    console.error("Request startup failed:", error.message);
+    console.error("Request startup failed:", error);
 
     if (!res.headersSent) {
       return res.status(500).json({
@@ -19,11 +33,11 @@ async function handleRequest(req, res) {
   }
 }
 
-// Local development: npm run dev
+// Local development
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
 
-  connectDB()
+  ensureDBConnection()
     .then(() => {
       app.listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);
@@ -36,5 +50,4 @@ if (require.main === module) {
     });
 }
 
-// Vercel uses this exported request handler.
 module.exports = handleRequest;

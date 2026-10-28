@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -9,9 +8,22 @@ const rateLimit = require("express-rate-limit");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/globalErrorController");
 
-const productRoutes = require("./routes/productsRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productsRoutes");
+const orderRouter = require("./routes/orderRoutes");
+const cartRouter = require("./routes/cartRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const statsRoutes = require("./routes/statsRoutes");
+const newsletterRoutes = require("./routes/newsletterRoutes");
+const heroBannerRoutes = require("./routes/heroBannerRoutes");
+const pageRoutes = require("./routes/pageRoutes");
+const reportRouter = require("./routes/reportRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const wishListRoutes = require("./routes/wishListRoutes");
+const referralRoutes = require("./routes/referralRoutes");
+const walletRoutes = require("./routes/walletRoutes");
+const withdrawalRoutes = require("./routes/withdrawalRoutes");
+const adminReferralRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -30,7 +42,7 @@ app.set("query parser", "extended");
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
-  })
+  }),
 );
 
 /* =====================================================
@@ -53,27 +65,14 @@ const corsOptions = {
 
     console.warn(`CORS rejected origin: ${origin}`);
 
-    return callback(
-      new AppError("Origin not allowed by CORS", 403)
-    );
+    return callback(new AppError("Origin not allowed by CORS", 403));
   },
 
   credentials: true,
 
-  methods: [
-    "GET",
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE",
-    "OPTIONS",
-  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With",
-  ],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 
   optionsSuccessStatus: 204,
 };
@@ -94,7 +93,7 @@ app.use(
   express.urlencoded({
     extended: true,
     limit: "1mb",
-  })
+  }),
 );
 
 /* =====================================================
@@ -146,21 +145,46 @@ app.get("/", (req, res) => {
    API ROUTES
 ===================================================== */
 
-app.use("/api/v1/products", productRoutes);
-app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/users", userRoutes);
+
+app.use("/api/v1/products", productRoutes);
+
+app.use("/api/v1/reports", reportRouter);
+
+app.use("/api/v1/orders", orderRouter);
+
+app.use("/api/v1/referrals", referralRoutes);
+
+app.use("/api/v1/wallet", walletRoutes);
+
+app.use("/api/v1/cart", cartRouter);
+
+app.use("/api/v1/categories", categoryRoutes);
+
+app.use("/api/v1/stats", statsRoutes);
+
+app.use("/api/v1/newsletter", newsletterRoutes);
+
+app.use("/api/v1/hero-banners", heroBannerRoutes);
+
+app.use("/api/v1/pages", pageRoutes);
+
+// app.use("/api/v1/vendors", vendorRoutes);
+
+app.use("/api/v1/reviews", reviewRoutes);
+
+app.use("/api/v1/wishlist", wishListRoutes);
+
+app.use("/api/v1/withdrawal", withdrawalRoutes);
+
+app.use("/api/v1/admin", adminReferralRoutes);
 
 /* =====================================================
    NOT FOUND
 ===================================================== */
 
 app.use((req, res, next) => {
-  next(
-    new AppError(
-      `Cannot find ${req.originalUrl} on this server`,
-      404
-    )
-  );
+  next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
 });
 
 /* =====================================================

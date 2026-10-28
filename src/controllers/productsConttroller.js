@@ -3,7 +3,7 @@ const ApiFeatures = require("../utils/ApiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
-const { uploadImage, deleteImage } = require("../services/cloudinarServices");
+const { uploadImage, deleteImage } = require("../../src/services/cloudinaryServices");
 
 /*
 =====================================================
