@@ -133,13 +133,12 @@ app.use("/api", limiter);
    ROOT ROUTE
 ===================================================== */
 
-// app.get("/", (req, res) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "Welcome to EmmCoreShops API",
-//     health: "/api/health",
-//   });
-// });
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to EmmCoreShops API",
+  });
+});
 
 /* =====================================================
    API ROUTES
