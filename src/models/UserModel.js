@@ -56,14 +56,24 @@ const userSchema = new mongoose.Schema(
     },
 
     // Used by signup and password-change operations.
+
     passwordConfirm: {
       type: String,
-      required: [true, "Please confirm your password"],
+      select: false,
       validate: {
         validator: function (value) {
-          return value === this.password;
+          // Existing users only need confirmation when changing a password.
+          if (!this.isNew && !this.isModified("password")) {
+            return true;
+          }
+
+          return (
+            typeof value === "string" &&
+            value.length > 0 &&
+            value === this.password
+          );
         },
-        message: "Passwords do not match",
+        message: "Passwords do not match or confirmation is missing.",
       },
     },
 
@@ -222,9 +232,7 @@ userSchema.methods.correctPassword = async function (
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (!this.passwordChangedAt) return false;
 
-  const changedTimestamp = Math.floor(
-    this.passwordChangedAt.getTime() / 1000,
-  );
+  const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
 
   return JWTTimestamp < changedTimestamp;
 };
