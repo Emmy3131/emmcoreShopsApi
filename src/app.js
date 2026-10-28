@@ -14,7 +14,7 @@ const orderRouter = require("./routes/orderRoutes");
 const cartRouter = require("./routes/cartRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const statsRoutes = require("./routes/statsRoutes");
-const newsletterRoutes = require("./routes/newsletterRoutes");
+const newsletterRoutes = require("./routes/newsLetterRoutes");
 const heroBannerRoutes = require("./routes/heroBannerRoutes");
 const pageRoutes = require("./routes/pageRoutes");
 const reportRouter = require("./routes/reportRoutes");
@@ -49,6 +49,7 @@ app.use(
    CORS CONFIGURATION
 ===================================================== */
 
+
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -57,29 +58,29 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 const corsOptions = {
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+  ],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors({
+  ...corsOptions,
   origin(origin, callback) {
-    // Allow requests without Origin, such as server-to-server calls.
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    console.warn(`CORS rejected origin: ${origin}`);
-
+    console.warn("CORS rejected origin:", origin);
     return callback(new AppError("Origin not allowed by CORS", 403));
   },
+}));
 
-  credentials: true,
-
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-
-  optionsSuccessStatus: 204,
-};
-
-// Register CORS before rate limiting and API routes.
-// This also handles browser preflight OPTIONS requests.
-app.use(cors(corsOptions));
 
 /* =====================================================
    BODY PARSING AND COOKIES
